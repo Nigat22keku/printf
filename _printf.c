@@ -1,12 +1,16 @@
+#include <stdio.h>
 #include<stdarg.h>
+#include <unistd.h>
+#include "main.h"
 
 int _printf (const char *format, ...)
 {
 int count;
+int i;
 va_list data;
 va_start(data, format);
 
-for (int i = 0; format[i] != '%' && format[i] != '\0'; i++)
+for (i = 0; format[i] != '%' && format[i] != '\0'; i++)
 {
 if (format[i] != '%')
 {
@@ -18,7 +22,7 @@ else if (format[i] == '%' && format[i + 1] != ' ')
 switch (format[i + 1])
 {
 case 'c':
-count +=_putchar(va_arg(data, int));
+count += _putchar(va_arg(data, int));
 break;
 case 's':
 count += print_string(va_arg(data, char *));
