@@ -1,53 +1,87 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
 #include "main.h"
+
+/**
+* print_int - prints an integer
+* @l: va_list of arguments from _print
+* @f: pointer to the struct flags determining
+* if a flag is passed to _printf
+* Return: number of char printed
+*/
+int print_int(va_list l, flags_t *f)
+{
+	int n = va_arg(l, int);
+	int res = count_digit(n);
+
+	if (f->space == 1 && f->plus == 0 && n >= 0)
+		res += _putchar(' ');
+	if (f->plus == 1 && n >= 0)
+		res += _putchar('+');
+	if (n <= 0)
+		res++;
+	print_number(n);
+	return (res);
+}
 
 
 /**
- * print_int - prints integer
- * @i: integer to be printed
- * Return: size
+ * print_unsigned - prints an unsigned integer
+ * @l: va_list of arguments from _printf
+ * @f: pointer to the struct flags determining
+ * if a flag is passed to _printf
+ * Return: number of char printed
  */
 
-int print_int(va_list i)
+int print_unsigned(va_list l, flags_t *f)
 {
-int len, pow, j, digit, n, count, num;
-count = 0;
-n = va_arg(i, int);
-if (n != 0)
-{
-if (n < 0)
-{
-_putchar('-');
-count++;
+	unsigned int u = va_arg(l, unsigned int);
+	char *str = convert(u, 10, 0);
+	(void)f;
+
+	return (_puts(str));
 }
-num = n;
-len = 0;
-while (num != 0)
+
+/**
+* print_number - helper function that loops through
+*an integer and prints all its digits
+* @n: integer to be printed
+*/
+void print_number(int n)
 {
-num /= 10;
-len++;
+	unsigned int n1;
+
+	if (n < 0)
+	{
+		_putchar('-');
+		n1 = -n;
+	}
+	else
+		n1 = n;
+
+	if (n1 / 10)
+		print_number(n1 / 10);
+	_putchar((n1 % 10) + '0');
 }
-pow = 1;
-for (j = 1; j <= len - 1; j++)
-pow *= 10;
-for (j = 1; j <= len; j++)
+
+
+/**
+ * count_digit - returns the number of digits in an integer
+ * for _printf
+ * @i: integer to evaluate
+ * Return: number of digits
+ */
+int count_digit(int i)
 {
-digit = n / pow;
-if (n < 0)
-_putchar((digit * -1) + 48);
-else
-_putchar(digit + '0');
-count++;
-n -= (digit *pow);
-pow /= 10;
-}
-}
-else
-{
-_putchar('0');
-return (1);
-}
-return (count);
+	unsigned int d = 0;
+	unsigned int u;
+
+	if (i < 0)
+		u = i * -1;
+	else
+		u = i;
+	while (u != 0)
+	{
+		u /= 10;
+		d++;
+	}
+	return (d);
 }
